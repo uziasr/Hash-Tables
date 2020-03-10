@@ -6,6 +6,8 @@ class LinkedPair:
         self.key = key
         self.value = value
         self.next = None
+    def __str__(self):
+        return (f"{self.key}, {self.value}")
 
 class HashTable:
     '''
@@ -14,7 +16,7 @@ class HashTable:
     '''
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
-        self.storage = [None] * capacity
+        self.storage = [None] * capacity        
 
 
     def _hash(self, key):
@@ -48,10 +50,44 @@ class HashTable:
         Store the value with the given key.
 
         Hash collisions should be handled with Linked List Chaining.
-
-        Fill this in.
+        
         '''
-        pass
+        index = self._hash_mod(key) # index = number within storage range
+        none_count = self.storage.count(None)
+        # if (1 - none_count/self.capacity) > .7:
+        #     self.resize()    
+        if None not in self.storage:
+            self.resize()
+
+        #if not self.storage[index] 
+        if self.storage[index] is not None:
+            # print('Theres a collision')
+            # make sure .next is None
+            current_node = self.storage[index]
+            while current_node.next:
+                if current_node.key == key:
+                    current_node.value = value
+                    break
+                elif current_node.next.next == None:
+                    current_node.next.next =  LinkedPair(key,value)
+                    break
+                current_node = current_node.next  
+                # self.storage[index].next = LinkedPair(key,value)
+
+        else:
+            # self.storage[index] = value
+            self.storage[index] = LinkedPair(key,value)
+
+
+
+
+            # self.storage[self._hash_mod(key)] = value
+        # if self.storage[index] is not None:
+        #     print("Error: key is in use")
+        # else:
+        #     self.storage[index] = value
+
+        # pass
 
 
 
@@ -63,7 +99,12 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        try:
+            self.capacity[self._hash_mod(key)]
+        except:
+            print("this key is not in here!!")
+            return
+        del self.storage[key]
 
 
     def retrieve(self, key):
@@ -74,7 +115,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        if self.storage[index] == None:
+            return None
+        else:
+            current_node = self.storage[index]
+            while current_node:
+                if current_node.key == key:
+                    return current_node.value
+                current_node = current_node.next
+        # return self.storage[index]
 
 
     def resize(self):
@@ -84,7 +134,21 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        #spread out with new_capacity
+        #if link list gets too long, resize
+        #resize at 70%
+        #go through every node and insert
+        self.capacity *= 2
+        newHT = HashTable(self.capacity)
+        # print("this is the storage ",self.storage) 
+        for lp in self.storage:
+            if lp:
+                newHT.insert(lp.key, lp.value)
+                current_node = lp
+                while current_node.next is not None:
+                    newHT.insert(current_node.next.key, current_node.next.value)
+                    current_node = current_node.next
+        self.storage = newHT.storage
 
 
 
@@ -95,7 +159,7 @@ if __name__ == "__main__":
     ht.insert("line_2", "Filled beyond capacity")
     ht.insert("line_3", "Linked list saves the day!")
 
-    print("")
+    print("I want to see this print", ht.storage )
 
     # Test storing beyond capacity
     print(ht.retrieve("line_1"))
