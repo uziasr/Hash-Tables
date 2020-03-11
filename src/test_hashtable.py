@@ -20,16 +20,21 @@ class TestHashTable(unittest.TestCase):
         ht.insert("key-9", "val-9")
 
         return_value = ht.retrieve("key-0")
+        print("is this a linked pair",return_value)
         self.assertTrue(return_value == "val-0")
         return_value = ht.retrieve("key-1")
+        print("this is the one that fails, ", return_value)
         self.assertTrue(return_value == "val-1")
+        
         return_value = ht.retrieve("key-2")
+        print("this is the one that fails, ", return_value)
         self.assertTrue(return_value == "val-2")
         return_value = ht.retrieve("key-3")
         self.assertTrue(return_value == "val-3")
         return_value = ht.retrieve("key-4")
         self.assertTrue(return_value == "val-4")
         return_value = ht.retrieve("key-5")
+        print("this is the one that fails, ", return_value)
         self.assertTrue(return_value == "val-5")
         return_value = ht.retrieve("key-6")
         self.assertTrue(return_value == "val-6")
@@ -120,7 +125,7 @@ class TestHashTable(unittest.TestCase):
         self.assertTrue(return_value == "val-8")
         return_value = ht.retrieve("key-9")
         self.assertTrue(return_value == "val-9")
-
+        print("this is before all the removals", ht.storage)
         ht.remove("key-9")
         ht.remove("key-8")
         ht.remove("key-7")
@@ -132,6 +137,7 @@ class TestHashTable(unittest.TestCase):
         ht.remove("key-1")
         ht.remove("key-0")
 
+        print("this is before all the asserts!", ht.storage)    
         return_value = ht.retrieve("key-0")
         self.assertTrue(return_value is None)
         return_value = ht.retrieve("key-1")
